@@ -16,8 +16,8 @@ def FileOpen():
 
 def part1():
     callout, mat_boards = FileOpen()
-    find_first = False
-    find_last = [False]*len(mat_boards)
+    isFirstBingo = False
+    isBoardBingo = [False]*len(mat_boards)
     arr_boards = []
     bingo_sum_first = 0
     bingo_sum_last = 0
@@ -26,18 +26,18 @@ def part1():
         arr_boards.append(flatten(mat))
 
     for number in callout:
-        for idx in range(len(arr_boards)):
-            arr_boards[idx] = [-1 if int(number)==x else x for x in arr_boards[idx]]
-            if(isNegVector(arr_boards[idx]) == True):
-                if(find_first == False):
-                    bingo_board_first = arr_boards[idx]
+        for bdNr in range(len(arr_boards)):
+            arr_boards[bdNr] = [-1 if int(number)==x else x for x in arr_boards[bdNr]]
+            if(isNegVector(arr_boards[bdNr]) == True):
+                if(isFirstBingo == False):
+                    bingo_board_first = arr_boards[bdNr]
                     bingo_number_first = int(number)
-                    find_first = True
-                if(find_last[idx] == False):
-                    bingo_board_last = arr_boards[idx]
+                    isFirstBingo = True
+                if(isBoardBingo[bdNr] == False):
+                    bingo_board_last = arr_boards[bdNr]
                     bingo_number_last = int(number)
-                    find_last[idx] = True
-        if (find_last.count(False) == 0):
+                    isBoardBingo[bdNr] = True
+        if (isBoardBingo.count(False) == 0):
             break
 
     for num in bingo_board_first:
