@@ -23,7 +23,6 @@ def part1():
         "bingo_board": [],
         "bingo_number": [],
         "bingo_sum": [],
-        "bingo_seq": [],
         "products": [],
     }
 
@@ -39,7 +38,6 @@ def part1():
                     # Adds Valid Board to list if board not bingoed yet
                     winner["bingo_board"].append(arr_boards[bdNr])
                     winner["bingo_number"].append(int(number))
-                    winner["bingo_seq"].append(bdNr)
                     isBoardAlreadyBingo[bdNr] = True
         if (isBoardAlreadyBingo.count(False) == 0):
             # Breaks loop is no more boards to bingo
@@ -56,10 +54,7 @@ def addBingoMat(bingo_list: list):
     """
     Add unmarked numbers in bingo matrix
     """
-    sum = 0
-    for num in bingo_list:
-        sum += num if num!=-1 else 0
-    return(sum)
+    return(sum([x for x in bingo_list if x!=-1]))
 
 def MultMatandNum(bingo_sum: int, bingo_number: int ):
     return(bingo_sum*bingo_number)
