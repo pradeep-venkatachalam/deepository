@@ -16,40 +16,60 @@ def FileOpen():
 
 def part1():
     callout, mat_boards = FileOpen()
-    isFirstBingo = False
-    isBoardBingo = [False]*len(mat_boards)
+    num_boards = len(mat_boards)
+    isBoardAlreadyBingo = [False]*num_boards
     arr_boards = []
-    bingo_sum_first = 0
-    bingo_sum_last = 0
+    winner = {
+        "bingo_board": [],
+        "bingo_number": [],
+        "bingo_sum": [],
+        "bingo_seq": [],
+        "products": [],
+    }
 
     for mat in mat_boards:
+        # Convert board (str) matrixes to board (int) list
         arr_boards.append(flatten(mat))
 
     for number in callout:
-        for bdNr in range(len(arr_boards)):
-            arr_boards[bdNr] = [-1 if int(number)==x else x for x in arr_boards[bdNr]]
+        for bdNr in range(num_boards):
+            arr_boards[bdNr] = mark(number,arr_boards[bdNr])
             if(isNegVector(arr_boards[bdNr]) == True):
-                if(isFirstBingo == False):
-                    bingo_board_first = arr_boards[bdNr]
-                    bingo_number_first = int(number)
-                    isFirstBingo = True
-                if(isBoardBingo[bdNr] == False):
-                    bingo_board_last = arr_boards[bdNr]
-                    bingo_number_last = int(number)
-                    isBoardBingo[bdNr] = True
-        if (isBoardBingo.count(False) == 0):
+                if(isBoardAlreadyBingo[bdNr] == False):
+                    # Adds Valid Board to list if board not bingoed yet
+                    winner["bingo_board"].append(arr_boards[bdNr])
+                    winner["bingo_number"].append(int(number))
+                    winner["bingo_seq"].append(bdNr)
+                    isBoardAlreadyBingo[bdNr] = True
+        if (isBoardAlreadyBingo.count(False) == 0):
+            # Breaks loop is no more boards to bingo
             break
 
-    for num in bingo_board_first:
-        bingo_sum_first += num if num!=-1 else 0
-    for num in bingo_board_last:
-        bingo_sum_last += num if num!=-1 else 0
+    for idx in range(len(winner["bingo_board"])):
+        winner["bingo_sum"].append(addBingoMat(winner["bingo_board"][idx]))
+        winner["products"].append(MultMatandNum(winner["bingo_sum"][idx],winner["bingo_number"][idx]))
 
-    prod_first = bingo_sum_first*bingo_number_first
-    prod_last = bingo_sum_last*bingo_number_last
+    print(winner["products"][0])
+    print(winner["products"][-1])
 
-    print(prod_first)
-    print(prod_last)
+def addBingoMat(bingo_list: list):
+    """
+    Add unmarked numbers in bingo matrix
+    """
+    sum = 0
+    for num in bingo_list:
+        sum += num if num!=-1 else 0
+    return(sum)
+
+def MultMatandNum(bingo_sum: int, bingo_number: int ):
+    return(bingo_sum*bingo_number)
+
+def mark(n, board):
+    """
+    Mark occurence of number in board with -1
+    """
+    board = [-1 if int(n)==x else x for x in board]
+    return board
 
 def flatten(Inputstring: str):
     """
@@ -64,15 +84,11 @@ def flatten(Inputstring: str):
 def isNegVector(arr_boards: list):
     """
     Convert integer list to numpy matrix 
-    Compare against neg vector
+    Compare against sum
     """
-    neg_vector = np.array([-1, -1, -1, -1, -1])
-
     a = np.asarray(arr_boards).reshape(5,5)
-    for i in range(5):
-        if(np.array_equal(a[i],neg_vector)) or \
-            np.array_equal(a[:,i],neg_vector):
-            return True
+    if(any(sum(a)== -5) or any(sum(a.T)==-5)):
+        return True
 
 
 def main():
