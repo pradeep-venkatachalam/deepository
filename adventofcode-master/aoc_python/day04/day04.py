@@ -33,15 +33,11 @@ def part1():
     for number in callout:
         for bdNr in range(num_boards):
             arr_boards[bdNr] = mark(number,arr_boards[bdNr])
-            if(isNegVector(arr_boards[bdNr]) == True):
-                if(isBoardAlreadyBingo[bdNr] == False):
+            if(isNegVector(arr_boards[bdNr]) == True and isBoardAlreadyBingo[bdNr] == False):
                     # Adds Valid Board to list if board not bingoed yet
                     winner["bingo_board"].append(arr_boards[bdNr])
                     winner["bingo_number"].append(int(number))
                     isBoardAlreadyBingo[bdNr] = True
-        if (isBoardAlreadyBingo.count(False) == 0):
-            # Breaks loop is no more boards to bingo
-            break
 
     for idx in range(len(winner["bingo_board"])):
         winner["bingo_sum"].append(addBingoMat(winner["bingo_board"][idx]))
@@ -63,8 +59,7 @@ def mark(n, board):
     """
     Mark occurence of number in board with -1
     """
-    board = [-1 if int(n)==x else x for x in board]
-    return board
+    return [-1 if int(n)==x else x for x in board]
 
 def flatten(Inputstring: str):
     """
@@ -72,8 +67,7 @@ def flatten(Inputstring: str):
     .split() removes all the whitespaces, tabs and newlines
     list(map()) converts to integer list
     """
-    flat = list(map(int, Inputstring.split()))
-    return(flat)
+    return(list(map(int, Inputstring.split())))
 
 
 def isNegVector(arr_boards: list):
@@ -82,9 +76,7 @@ def isNegVector(arr_boards: list):
     Compare against sum
     """
     a = np.asarray(arr_boards).reshape(5,5)
-    if(any(sum(a)== -5) or any(sum(a.T)==-5)):
-        return True
-
+    return(True if(any(sum(a)== -5) or any(sum(a.T)==-5)) else False)
 
 def main():
     """ Main entry point of the app """
