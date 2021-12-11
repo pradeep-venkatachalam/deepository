@@ -26,16 +26,37 @@ def Day(input_mapping : list):
 
 def part1(mapping, len_days):
     input_mapping = list(map(int, mapping))
-    for _ in range(len_days):
+    for day in range(len_days):
         input_mapping = Day(input_mapping)
+        if (day%7 ==0):
+            print (day, len(input_mapping), input_mapping)
     print(len(input_mapping))
+
+def rotate(l, n):
+    return l[n:] + l[:n]
+ 
+
+def part2(mapping, len_days):
+    # Value of Lifetime of fish can be from 0-8
+    # Initialize 9 input array
+    count_array = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    input_mapping = list(map(int, mapping))
+    for fish in input_mapping:
+        count_array[fish] += 1
+    
+    for i in range(len_days):
+        count_array = rotate(count_array,1)
+        count_array[6] += count_array[8]
+
+    print(sum(count_array))
 
 def main():
     """ Main entry point of the app """
     mapping = FileOpen()
-    len_days = 18
+    len_days = 256
 
-    part1(mapping, len_days)
+    part2(mapping, len_days)
+
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """
